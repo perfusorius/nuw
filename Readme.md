@@ -72,9 +72,9 @@ To display help:
 
 nuw runs only on Windows. It will detect your architecture (32bit, 64bit) automatically and install the proper version. 
 
-nuw can currently only update node to newer releases. If you want to downgrade you have to uninstall your current version and then install the older version.
+nuw can update node to newer and older releases. When downgrading to an older release two msi files will be executed. First your current version will be uninstalled and then the target version gets installed.
 
-Node releases will be downloaded to your global temp directory (defaults to "C:\Users\You\AppData\Local\Temp").
+Node releases will be downloaded to your global temp directory (defaults to "C:\Users\You\AppData\Local\Temp"). When the msi file already exists the download is skipped.
 
 ## License
 

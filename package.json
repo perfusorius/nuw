@@ -16,7 +16,7 @@
     "main": "./nuw",
     "bin": "./bin/nuw.cmd",
     "engines": {
-        "node": "*"
+        "node": ">= 0.7.11"
     },
     "os": ["win32"],
     "cpu": ["x64", "ia32"],

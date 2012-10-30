@@ -43,8 +43,7 @@ function errLog (err) {
 function show (what) {
     var _stable, _latest;
     if (!what.match(/^(both|stable|latest)$/)) {
-        printHelp();
-        return;
+        return printHelp();
     }
     console.log('Fetching info from nodejs.org ...');
     var result = function () {
@@ -78,10 +77,8 @@ var args = process.argv,
     argl = args.length;
 if (argl === 2) {
     lib.getCurrentVersion(function (err, data, rc) {
-        if (err) {
-            errLog(err);
-        }
-        console.log('Your current version:', data.ver, '(type: ' + data.type + ')');
+        errLog(err);
+        console.log('Your current version:', data.ver, '(type:', data.type + ')');
     });
 }
 else if (argl > 2) {
@@ -91,7 +88,7 @@ else if (argl > 2) {
         case 'ls':
             lib.getVersions(function (err, versions) {
                 errLog(err);
-                console.log('All available versions on nodejs.org:' + os.EOL, versions.join(os.EOL));
+                console.log('All available versions on nodejs.org:' + os.EOL + versions.join(os.EOL));
             });
            break;
 

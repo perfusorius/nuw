@@ -5,26 +5,73 @@ if (os.platform() !== 'win32') {
     return console.log('Attention: nuw runs only on Windows');
 }
 
+function getNuwVer () {
+    return require('./package.json').version;
+}
+
 function printHelp () {
     var help = 'nuw - Node Updater for Windows' + os.EOL
-    + '' + os.EOL
+    + 'Version: ' + getNuwVer() + os.EOL
+    + os.EOL
     + 'Syntax:' + os.EOL
-    + 'nuw                Output currently installed version' + os.EOL
+    + os.EOL
+    + 'nuw                Output currently installed node version' + os.EOL
     + 'nuw ls             Output all versions of node available' + os.EOL
     + 'nuw show           Output the latest and the latest stable node version available' + os.EOL
-    + 'nuw show-latest    Output the latest node version available' + os.EOL
-    + 'nuw show-stable    Output the latest stable node version available' + os.EOL
+    + 'nuw show latest    Output the latest node version available' + os.EOL
+    + 'nuw show stable    Output the latest stable node version available' + os.EOL
+    + os.EOL
     + 'nuw check          Check for newer release (respects currently installed type)' + os.EOL
+    + os.EOL
     + 'nuw update         Install the latest (stable) release (respects currently installed type)' + os.EOL
     + 'nuw latest         Install the latest node release (ignores currently installed type)' + os.EOL
     + 'nuw stable         Install the latest stable node release (ignores currently installed type)' + os.EOL
     + 'nuw <ver>          Install specific version, e.g. 0.8.10 (ignores currently installed type)' + os.EOL
-    + 'nuw help           Display help information (this screen)' + os.EOL;
+    + os.EOL
+    + 'nuw ver            Output version of nuw' + os.EOL
+    + 'nuw help           Display help information (this screen)';
     console.log(help);
 }
 
 function errLog (err) {
-    console.log('An error occured:', err);
+    if (err) {
+        console.log('An error occured:', err);
+        process.exit();
+    }
+}
+
+function show (what) {
+    var _stable, _latest;
+    if (!what.match(/^(both|stable|latest)$/)) {
+        printHelp();
+        return;
+    }
+    console.log('Fetching info from nodejs.org ...');
+    var result = function () {
+        if (what === 'both' && (!_stable || !_latest)) {
+            return;
+        }
+        if (what.match(/^(both|stable)$/)) {
+            console.log('Latest available stable version:', _stable);
+        }
+        if (what.match(/^(both|latest)$/)) {
+            console.log('Latest available version:', _latest);
+        }
+    }
+    if (what.match(/^(both|stable)$/)) {
+        lib.getLatestStableVersion(function (err, stable) {
+            errLog(err);
+            _stable = stable;
+            result();
+        });
+    }
+    if (what.match(/^(both|latest)$/)) {
+        lib.getLatestVersion(function (err, latest) {
+            errLog(err);
+            _latest = latest;
+            result();
+        });
+    }
 }
 
 var args = process.argv,
@@ -32,7 +79,7 @@ var args = process.argv,
 if (argl === 2) {
     lib.getCurrentVersion(function (err, data, rc) {
         if (err) {
-            return errLog(err);
+            errLog(err);
         }
         console.log('Your current version:', data.ver, '(type: ' + data.type + ')');
     });
@@ -43,54 +90,26 @@ else if (argl > 2) {
 
         case 'ls':
             lib.getVersions(function (err, versions) {
-                if (err) {
-                    return errLog(err);
-                }
+                errLog(err);
                 console.log('All available versions on nodejs.org:' + os.EOL, versions.join(os.EOL));
             });
            break;
 
         case 'show':
-            console.log('Fetching latest versions from nodejs.org...');
-            lib.getLatestStableVersion(function (err, stable) {
-                if (err) {
-                    return errLog(err);
-                }
-                lib.getLatestVersion(function (err, latest) {
-                    if (err) {
-                        return errLog(err);
-                    }
-                    console.log('Latest available stable version:', stable);
-                    console.log('Latest available version:', latest);
-                });
-            });
+            (args[3]) ? show(args[3]) : show('both');
            break;
 
         case 'show-latest':
-            console.log('Fetching latest version from nodejs.org...');
-            lib.getLatestVersion(function (err, latest) {
-                if (err) {
-                    return errLog(err);
-                }
-                console.log('Latest available version:', latest);
-            });
+            show('latest');
            break;
 
         case 'show-stable':
-            console.log('Fetching latest stable version from nodejs.org...');
-            lib.getLatestStableVersion(function (err, latest) {
-                if (err) {
-                    return errLog(err);
-                }
-                console.log('Latest available stable version:', latest);
-            });
+            show('stable');
             break;
 
         case 'check':
             lib.checkIfNewest(function (err, data) {
-                if (err) {
-                    return errLog(err);
-                }
+                errLog(err);
                 if (data.newer) {
                     console.log('Your version "%s" is outdated, latest version is "%s"', data.current, data.latest);
                 }
@@ -103,9 +122,7 @@ else if (argl > 2) {
         case 'update':
             console.log('Updating ...');
             lib.update(null, function (err, msg) {
-                if (err) {
-                    return errLog(err);
-                }
+                errLog(err);
                 console.log(msg);
             });
             break;
@@ -113,9 +130,7 @@ else if (argl > 2) {
         case 'latest':
             console.log('Updating to latest version ...');
             lib.update('latest', function (err, msg) {
-                if (err) {
-                    return errLog(err);
-                }
+                errLog(err);
                 console.log(msg);
             });
             break;
@@ -123,9 +138,7 @@ else if (argl > 2) {
         case 'stable':
             console.log('Updating to latest stable version ...');
             lib.update('stable', function (err, msg) {
-                if (err) {
-                    return errLog(err);
-                }
+                errLog(err);
                 console.log(msg);
             });
             break;
@@ -134,14 +147,16 @@ else if (argl > 2) {
             printHelp();
             break;
 
+        case 'ver':
+            console.log('nuw Version:', getNuwVer());
+            break;
+
         default:
             var ver = args[2];
             if (lib.isValidVersion(ver)) {
                 console.log('Updating to version "%s" ...', ver);
                 lib.update(ver, function (err, msg) {
-                    if (err) {
-                        return errLog(err);
-                    }
+                    errLog(err);
                     console.log(msg);
                 });
             }

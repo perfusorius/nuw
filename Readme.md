@@ -1,6 +1,8 @@
 # nuw - Node Updater for Windows
 
-This is a update script written in Node to update Node on Windows machines. It is inspired by TJ Holowaychuk's [n](https://github.com/visionmedia/n "n").
+This is a update script written in Node to update Node on Windows machines. It uses the complete msi packages. There is only one installed version of node at a time - installing a new version will replace the existing one.
+
+nuw is inspired by TJ Holowaychuk's [n](https://github.com/visionmedia/n "n").
 
 ## Installation
 
@@ -26,11 +28,11 @@ To output the latest and the latest stable node version available:
 
 To output the latest node version available:
 
-    nuw show-latest
+    nuw show latest
 
 To output the latest stable node version available:
 
-    nuw show-stable
+    nuw show stable
 
 ### Check
 
@@ -58,13 +60,17 @@ To install a specific node release (like "0.8.10"):
 
 ### Help
 
+To display version of nuw:
+
+    nuw ver
+
 To display help:
 
     nuw help
 
 ## Details
 
-nuw runs only on Windows. It will detect your architecture (32bit, 64bit) automatically and install the proper version.
+nuw runs only on Windows. It will detect your architecture (32bit, 64bit) automatically and install the proper version. 
 
 nuw can currently only update node to newer releases. If you want to downgrade you have to uninstall your current version and then install the older version.
 

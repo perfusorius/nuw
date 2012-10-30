@@ -1,0 +1,28 @@
+{
+    "name": "nuw",
+    "version": "0.8.0",
+    "description": "Node Updater for Windows",
+    "keywords": ["node", "update", "install", "version", "windows"],
+    "author": "Sascha Drews <mail@perfusorius.de>",
+    "homepage": "https://github.com/perfusorius/nuw",
+    "repository": {
+        "type": "git",
+        "url": "git://github.com/perfusorius/nuw.git"
+    },
+    "bugs": {
+        "url": "https://github.com/perfusorius/nuw/issues",
+        "email": "mail@perfusorius.de"
+    },
+    "main": "./nuw",
+    "bin": "./bin/nuw.cmd",
+    "engines": {
+        "node": "*"
+    },
+    "os": ["win32"],
+    "cpu": ["x64", "ia32"],
+    "preferGlobal": true,
+    "dependencies":{
+        "request": ">= 2.11.x",
+        "semver": ">= 1.1.0"
+    }
+}

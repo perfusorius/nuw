@@ -80,7 +80,7 @@ Node releases will be downloaded to your global temp directory (defaults to "C:\
 
 (The MIT License)
 
-Copyright (c) 2012 Sascha Drews &lt;mail@perfusorius.de&gt;
+Copyright (c) 2014 Sascha Drews &lt;mail@perfusorius.de&gt;
 
 Permission is hereby granted, free of charge, to any person obtaining
 a copy of this software and associated documentation files (the

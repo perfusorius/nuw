@@ -1,6 +1,6 @@
 {
     "name": "nuw",
-    "version": "1.0.0",
+    "version": "1.0.1",
     "description": "Node Updater for Windows",
     "keywords": ["node", "update", "install", "version", "windows"],
     "author": "Sascha Drews <mail@perfusorius.de>",
